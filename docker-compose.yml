@@ -3,35 +3,29 @@ services:
     build:
       context: .
       dockerfile: ./deploy/docker/Dockerfile.dev
-    container_name: safecity-api-larave
-    env_file:
-      - .env
-    depends_on:
-      - dblaravel
+    container_name: safecity-api-laravel
     networks:
       - safecity-network2
 
-  dblaravel:
-    image: postgis/postgis:latest  # Use the official PostGIS image
-    restart: always
-    environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - db_data:/var/lib/postgresql/data # For persistent data storage
-    networks:
-      - safecity-network2
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    ports:
-      - "5435:5432"  # Expose PostgreSQL port
+  # dblaravel:
+  #   image: postgis/postgis:latest  # Use the official PostGIS image
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: ${DB_DATABASE}
+  #     POSTGRES_USER: ${DB_USERNAME}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data # For persistent data storage
+  #   networks:
+  #     - safecity-network2
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 5
+  #   ports:
+  #     - "5435:5432"  # Expose PostgreSQL port
 
 networks:
   safecity-network2:
     driver: bridge
-volumes:
-  db_data:
