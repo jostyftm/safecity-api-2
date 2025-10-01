@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: ./deploy/docker/Dockerfile.dev
     container_name: safecity-api-larave
-    environment:
-      - DATABASE_URL= ${DATABASE_URL}
+    env_file:
+      - .env
     depends_on:
       - db
     networks:
