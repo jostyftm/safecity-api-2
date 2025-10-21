@@ -21,7 +21,7 @@ class IncidentCategoryUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $incidentCategoryId = request()->route('incident_category')->id;
+        $incidentCategoryId = request()->route('incidentCategory')->id;
         return [
             /**
              * The name of the incident category.

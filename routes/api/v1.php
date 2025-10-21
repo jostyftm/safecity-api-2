@@ -21,7 +21,7 @@ Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', function () {})->name('password.reset');
 Route::post('reset-password', [AuthController::class, 'resetUpdatePassword'])->name('password.update');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     Route::prefix('auth')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
@@ -35,10 +35,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('incidents/{incident}/verify', [IncidentController::class, 'verify'])->name('incidents.verify');
     Route::post('incidents/{incident}/auto-assign', [IncidentController::class, 'autoAssign'])->name('incidents.auto-assign');
 
-    Route::apiResource('controlEntities', ControlEntityController::class);
-    Route::apiResource('controlEntities.users', ControlEntityUserController::class);
-    Route::apiResource('controlEntities.availabilyZones', AvailabilyZoneController::class)->only(['index', 'store']);
-    Route::apiResource('availabilyZones', AvailabilyZoneController::class)->only(['show', 'update', 'destroy']);
+    // Route::apiResource('controlEntities', ControlEntityController::class);
+    // Route::apiResource('controlEntities.users', ControlEntityUserController::class);
+    // Route::apiResource('controlEntities.availabilyZones', AvailabilyZoneController::class)->only(['index', 'store']);
+    // Route::apiResource('availabilyZones', AvailabilyZoneController::class)->only(['show', 'update', 'destroy']);
 
-    Route::apiResource('provinces', ProvinceController::class);
+    // Route::apiResource('provinces', ProvinceController::class);
 });

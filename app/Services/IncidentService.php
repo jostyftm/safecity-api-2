@@ -32,7 +32,7 @@ class IncidentService
      */
     public function list(Request $request): Collection | AbstractPaginator
     {
-        $incidents = Incident::with(['category', 'user', 'city'])->get();
+        $incidents = Incident::with(['category', 'reporter'])->get();
 
         return $incidents;
     }
@@ -46,7 +46,7 @@ class IncidentService
     public function get(Incident $incident): ?Incident
     {
         $incidentResponse = Cache::remember("{$this->keyCache}_{$incident->id}", 86400, function () use ($incident) {
-            $incident->load(['category', 'user', 'city', 'media']);
+            $incident->load(['category', 'reporter']);
 
             return $incident;
         });
@@ -65,11 +65,16 @@ class IncidentService
     {
         $curresUSer = Auth::user();
 
-        [$lat, $lng] = $request->array('location', [null, null]);
+        [$lat, $lng] = $request->array('location.coordinates', [null, null]);
 
-        $incident = new Incident($request->validated());
-        $incident->reported_by = $curresUSer->id;
-        $incident->location = Point::makeGeodetic($lat, $lng);
+        $incident = new Incident([
+            'description'   => $request->input('description'),
+            'status'        => $request->input('status', 'reported'),
+            'category_id'   => $request->input('category_id'),
+            'reported_by'   => $curresUSer->id,
+            'location'      => Point::makeGeodetic($lat, $lng),
+            'reported_at'   => now(),
+        ]);
 
         $incident->save();
 
@@ -91,8 +96,15 @@ class IncidentService
             ]);
         }
 
-        $incident->update($request->validated());
-        $incident->load(['category', 'user', 'city', 'media']);
+        [$lat, $lng] = $request->array('location.coordinates', [null, null]);
+
+        $incident->update([
+            'description'   => $request->input('description'),
+            'status'        => $request->input('status', 'reported'),
+            'category_id'   => $request->input('category_id'),
+            'location'      => Point::makeGeodetic($lat, $lng),
+        ]);
+        $incident->load(['category', 'reporter']);
 
         return $incident;
     }
@@ -124,7 +136,7 @@ class IncidentService
 
         $incident->verified_at = now();
         $incident->save();
-        $incident->load(['category', 'user', 'city', 'media']);
+        $incident->load(['category', 'reporter']);
     }
 
     /**

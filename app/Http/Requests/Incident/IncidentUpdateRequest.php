@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Incident;
 
+use Clickbar\Magellan\Data\Geometries\Point;
+use Clickbar\Magellan\Rules\GeometryGeojsonRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IncidentUpdateRequest extends FormRequest
@@ -27,28 +29,50 @@ class IncidentUpdateRequest extends FormRequest
              * 
              * @example Help needed
              */
-            'title' => ['required', 'string', 'max:255'],
+            // 'title' => ['string', 'max:255'],
 
             /**
              * The category of the incident.
              * 
              * @example 1
              */
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['exists:incident_categories,id'],
 
             /**
              * The description of the incident.
              * 
              * @example I need help because...
              */
-            'description' => ['required', 'string'],
+            'description' => ['string'],
 
             /**
-             * The location gps coordinates of the incident.
+             * The status of the incident.
              * 
-             * @example [40.712776, -74.005974]
+             * @example reported
              */
-            'location' => ['required', 'array', 'numeric'],
+            'status' => ['in:reported,assigned,verified,resolved,closed'],
+
+
+            'location' => [new GeometryGeojsonRule([Point::class])],
+
+            /**
+             * The type of the geometry.
+             * 
+             * @example Point
+             */
+            'location.type' => ['in:Point'],
+
+            /**
+             * The coordinates of the geometry.
+             * 
+             * @example [-73.935242, 40.73061]
+             */
+            'location.coordinates' => ['array', 'size:2'],
         ];
+    }
+
+    public function geometries(): array
+    {
+        return ['location'];
     }
 }

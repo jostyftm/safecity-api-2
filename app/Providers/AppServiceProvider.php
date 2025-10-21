@@ -7,6 +7,7 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
                     SecurityScheme::http('bearer')
                 );
             });
+
+        RateLimiter::for(name: 'api', callback: function () {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(100)->by(
+                request()->user()?->id ?: request()->ip()
+            );
+        });
 
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             return config('app.frontend_url') . '/reset-password?token=' . $token . '&email=' . $user->email;
