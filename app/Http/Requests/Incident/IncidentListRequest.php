@@ -21,34 +21,6 @@ class IncidentListRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            /**
-             * The title of the incident.
-             * 
-             * @example Help needed
-             */
-            'title' => ['required', 'string', 'max:255'],
-
-            /**
-             * The category of the incident.
-             * 
-             * @example 1
-             */
-            'category_id' => ['required', 'exists:categories,id'],
-
-            /**
-             * The description of the incident.
-             * 
-             * @example I need help because...
-             */
-            'description' => ['required', 'string'],
-
-            /**
-             * The location gps coordinates of the incident.
-             * 
-             * @example [40.712776, -74.005974]
-             */
-            'location' => ['required', 'array', 'numeric'],
-        ];
+        return [];
     }
 }

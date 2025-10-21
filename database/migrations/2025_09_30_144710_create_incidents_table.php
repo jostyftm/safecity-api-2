@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            // $table->string('title');
             $table->text('description')->nullable();
             $table->enum('status', ['reported', 'in_progress', 'resolved', 'closed'])->default('reported');
             $table->foreignId('category_id')->constrained('incident_categories')->onDelete('restrict');
             $table->foreignId('reported_by')->constrained('users')->onDelete('restrict');
-            $table->foreignId('assigned_to')->constrained('users')->onDelete('restrict')->nullable();
-            $table->foreignId('city_id')->constrained('cities')->onDelete('restrict')->nullable();
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            // $table->foreignId('city_id')->constrained('cities')->onDelete('restrict')->nullable();
             $table->geometry(column: 'location', subtype: 'POINT', srid: 4326);
             $table->timestamp('reported_at')->useCurrent();
             $table->timestamp('assigned_at')->nullable();

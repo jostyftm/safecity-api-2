@@ -13,6 +13,5 @@ class IncidentCategory extends Model
     protected $fillable = [
         'name',
         'description',
-        'icon',
     ];
 }
