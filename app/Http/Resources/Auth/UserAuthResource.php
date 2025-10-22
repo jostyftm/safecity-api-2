@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Auth;
 
+use App\Http\Resources\Role\RoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +18,8 @@ class UserAuthResource extends JsonResource
         return [
             'type' => 'user_auth',
             'id' => (string) $this->id,
-            'attributes' => $this->getAttributes()
+            'attributes' => $this->getAttributes(),
+            'relationships' => $this->getRelationships(),
         ];
     }
 
@@ -32,6 +34,13 @@ class UserAuthResource extends JsonResource
             'email'         => $this->email,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at,
+        ];
+    }
+
+    private function getRelationships(): array
+    {
+        return [
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
         ];
     }
 }

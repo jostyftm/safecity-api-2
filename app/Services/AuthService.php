@@ -64,9 +64,12 @@ class AuthService
     /**
      * 
      */
-    public function me(Request $request)
+    public function me(Request $request): User
     {
-        return $request->user();
+        $user = $request->user();
+        $user->load('roles');
+
+        return $user;
     }
 
     /**
@@ -79,6 +82,8 @@ class AuthService
     {
         $user = User::create($request->all());
         $user->assignRole('user');
+
+        $user->load('roles');
 
         return $user;
     }

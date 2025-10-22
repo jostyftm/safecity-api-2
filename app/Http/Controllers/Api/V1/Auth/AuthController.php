@@ -47,7 +47,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me(Request $request)
+    public function me(Request $request): JsonResource
     {
         $user = $this->authService->me($request);
 
