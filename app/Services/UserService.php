@@ -43,6 +43,7 @@ class UserService
     public function get(User $user): ?User
     {
         $userResponse = Cache::remember("{$this->keyCache}_{$user->id}", 86400, function () use ($user) {
+            $user->load('roles');
             return $user;
         });
 
@@ -59,6 +60,7 @@ class UserService
     {
         $user = User::create($request->all());
         $user->assignRole($request->roles);
+        $user->load('roles');
 
         return $user;
     }
@@ -73,6 +75,8 @@ class UserService
     {
         $user->update($request->all());
         $user->syncRoles($request->roles);
+
+        $user->load('roles');
 
         return $user;
     }
