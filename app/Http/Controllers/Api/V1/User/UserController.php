@@ -87,7 +87,10 @@ class UserController extends Controller
     }
 
     /**
+     * Get incidents for a user
      * 
+     * @param User $user
+     * @return AnonymousResourceCollection<IncidentResource>
      */
     public function incidents(User $user): AnonymousResourceCollection
     {
