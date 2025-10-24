@@ -91,4 +91,14 @@ class UserService
     {
         $user->delete();
     }
+
+    /**
+     * 
+     */
+    public function incidents(User $user): Collection
+    {
+        $incidents = $user->incidents()->with(['category', 'reporter'])->get();
+
+        return $incidents;
+    }
 }

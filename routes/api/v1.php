@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     });
 
     Route::apiResource('users', UserController::class);
+    Route::get('users/{user}/incidents', [UserController::class, 'incidents'])->name('users.incidents');
     Route::apiResource('incidentCategories', IncidentCategoryController::class);
 
     Route::apiResource('incidents', IncidentController::class);

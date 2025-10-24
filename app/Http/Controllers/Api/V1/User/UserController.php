@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserListRequest;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\Incident\IncidentResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\UserService;
@@ -83,5 +84,15 @@ class UserController extends Controller
         $user->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * 
+     */
+    public function incidents(User $user): AnonymousResourceCollection
+    {
+        $incidents = $this->userService->incidents($user);
+
+        return IncidentResource::collection($incidents);
     }
 }

@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -67,5 +68,15 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Get the incidents reported by the user.
+     * 
+     * @return HasMany<Incident>
+     */
+    public function incidents(): HasMany
+    {
+        return $this->hasMany(Incident::class, 'reporter_id', 'id');
     }
 }
